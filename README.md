@@ -9,7 +9,7 @@ An AI-powered email classification web app built with Flask and Machine Learning
 - **Spam / Ham Classification** — detects whether an email is spam or not
 - **Risk Level Scoring** — rates detected spam as Low, Medium, or High risk using SVM decision scores
 - **Keyword Highlighting** — shows the important words that contributed to the spam prediction
-- **Two model versions** — v1 (CountVectorizer + basic model) and v2 (TF-IDF + Linear SVM with full NLP preprocessing)
+- **Full NLP Preprocessing** — URLs, emails, digits, punctuation, and stopwords removed before classification
 
 ---
 
@@ -17,26 +17,13 @@ An AI-powered email classification web app built with Flask and Machine Learning
 
 ```
 spam-email-detector/
-│
-├── spam-email-detector-vr1/        # Version 1 — simple baseline
-│   ├── app.py                      # Flask app
-│   ├── model.pkl                   # Trained ML model
-│   ├── vectorizer.pkl              # CountVectorizer
-│   ├── datasets/
-│   │   └── spam.csv                # Training dataset
-│   ├── templates/
-│   │   └── index.html
-│   └── static/
-│       └── style.css
-│
-└── spam-email-detector-vr2/        # Version 2 — improved with SVM + TF-IDF
-    ├── app.py                      # Flask app with NLP preprocessing
-    ├── linear_svm_model.pkl        # Linear SVM model
-    ├── tfidf_vectorizer.pkl        # TF-IDF Vectorizer
-    ├── templates/
-    │   └── index.html
-    └── static/
-        └── style.css
+├── app.py                  # Flask app with NLP preprocessing pipeline
+├── linear_svm_model.pkl    # Trained Linear SVM model
+├── tfidf_vectorizer.pkl    # TF-IDF Vectorizer
+├── templates/
+│   └── index.html
+└── static/
+    └── style.css
 ```
 
 ---
@@ -45,7 +32,7 @@ spam-email-detector/
 
 - **Backend:** Python, Flask
 - **ML/NLP:** scikit-learn, NLTK (lemmatization, stopword removal)
-- **Models:** CountVectorizer + ML classifier (v1), TF-IDF + Linear SVM (v2)
+- **Model:** TF-IDF + Linear SVM
 - **Frontend:** HTML, CSS (Jinja2 templates)
 
 ---
@@ -69,7 +56,7 @@ source venv/bin/activate      # On Windows: venv\Scripts\activate
 pip install flask scikit-learn nltk
 ```
 
-### 4. Download NLTK data (required for v2)
+### 4. Download NLTK data
 ```python
 import nltk
 nltk.download('stopwords')
@@ -77,16 +64,7 @@ nltk.download('wordnet')
 ```
 
 ### 5. Run the app
-
-**Version 1:**
 ```bash
-cd spam-email-detector-vr1
-python app.py
-```
-
-**Version 2:**
-```bash
-cd spam-email-detector-vr2
 python app.py
 ```
 
@@ -96,24 +74,26 @@ Then open your browser at `http://127.0.0.1:5000`
 
 ## 🧠 How It Works
 
-**Version 1** uses a basic CountVectorizer with lowercasing as the only preprocessing step.
+Each email goes through a full NLP preprocessing pipeline before classification:
 
-**Version 2** adds a full NLP preprocessing pipeline before vectorization:
-- Lowercasing
-- Removal of URLs, emails, digits, and punctuation
-- Stopword removal
-- Lemmatization (via NLTK WordNetLemmatizer)
-- TF-IDF vectorization
-- Linear SVM classification with decision score-based risk levels
+1. **Lowercasing** — normalize all text
+2. **Cleaning** — strip URLs, email addresses, digits, and punctuation
+3. **Stopword Removal** — filter out common words that add no signal
+4. **Lemmatization** — reduce words to their base form via NLTK's WordNetLemmatizer
+5. **TF-IDF Vectorization** — convert cleaned text into numerical features
+6. **Linear SVM Classification** — predict spam or ham using a trained Linear SVM
+7. **Risk Scoring** — use the SVM decision score to assign Low / Medium / High risk
 
 ---
 
-## 📊 Datasets
+## 📊 Dataset
 
-The models were trained on two datasets:
+Trained on the **[Enron Spam Dataset](http://www.aueb.gr/users/ion/data/enron-spam/)** — a large real-world email dataset derived from the Enron email corpus with spam/ham labels. This ensures the model generalizes well to actual email content.
 
-- **[SMS Spam Collection Dataset](https://www.kaggle.com/datasets/uciml/sms-spam-collection-dataset)** (`spam.csv`) — a labeled collection of SMS spam and ham messages, used in v1.
-- **[Enron Spam Dataset](http://www.aueb.gr/users/ion/data/enron-spam/)** — a large real-world email dataset derived from the Enron email corpus, with spam/ham labels. Used to improve v2's generalization on actual email content.
+> ⚠️ The `.pkl` model files are included in this repo for convenience. For larger models, consider using Git LFS or external storage.
 
-> ⚠️ The `datasets/` folder and `.pkl` model files are included in this repo for convenience since they are small enough. For larger datasets or models, consider using Git LFS or external storage.
+---
 
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
