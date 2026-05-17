@@ -37,41 +37,6 @@ spam-email-detector/
 
 ---
 
-## ⚙️ Setup & Installation
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/YOUR_USERNAME/spam-email-detector.git
-cd spam-email-detector
-```
-
-### 2. Create and activate a virtual environment
-```bash
-python -m venv venv
-source venv/bin/activate      # On Windows: venv\Scripts\activate
-```
-
-### 3. Install dependencies
-```bash
-pip install flask scikit-learn nltk
-```
-
-### 4. Download NLTK data
-```python
-import nltk
-nltk.download('stopwords')
-nltk.download('wordnet')
-```
-
-### 5. Run the app
-```bash
-python app.py
-```
-
-Then open your browser at `http://127.0.0.1:5000`
-
----
-
 ## 🧠 How It Works
 
 Each email goes through a full NLP preprocessing pipeline before classification:
@@ -93,7 +58,3 @@ Trained on the **[Enron Spam Dataset](http://www.aueb.gr/users/ion/data/enron-sp
 > ⚠️ The `.pkl` model files are included in this repo for convenience. For larger models, consider using Git LFS or external storage.
 
 ---
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
