@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Spam Email Detector</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Spam Email Detector</h1>
+
+        <p class="subtitle">
+            AI-Powered Email Classification System
+        </p>
+
+        <form action="/predict"
+              method="POST">
+
+            <textarea
+                name="email"
+                placeholder="Paste your email here..."
+                required>{{ email_text if email_text else '' }}</textarea>
+
+            <button type="submit">
+                Analyze Email
+            </button>
+
+        </form>
+
+        {% if prediction %}
+
+        <div class="result-card">
+
+            <h2>
+                Prediction:
+                <span class="
+                    {% if prediction == 'SPAM' %}
+                        spam
+                    {% else %}
+                        ham
+                    {% endif %}
+                ">
+                    {{ prediction }}
+                </span>
+            </h2>
+
+           <p>
+    Risk Level:
+    <strong>{{ risk_level }}</strong>
+</p>
+
+            <div class="keywords">
+
+                <h3>Important Words</h3>
+
+                {% for word in important_words %}
+
+                    <span class="tag">
+                        {{ word }}
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
